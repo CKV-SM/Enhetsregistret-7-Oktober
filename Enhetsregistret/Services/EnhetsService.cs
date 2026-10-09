@@ -25,10 +25,17 @@ public class EnhetsService : IEnhetsService
         return returnUnit;
     }
 
+    public void Add(Enhet enhet)
+    {
+        repo.LaggTill(enhet);
+    }
+
     public void SeedData()
     {
         var equipment = repo.HamtaAlla().LastOrDefault();
-
+        if (equipment is not null)
+            return;
+        
         var lastId = equipment?.Id ?? 1;
 
         var newEquipment = new Enhet[]{
@@ -37,11 +44,7 @@ public class EnhetsService : IEnhetsService
                 new Mobil(lastId++, "Samsung", 12000, 16),
                 new Projektor(lastId++, "Testprojekt", 25000, 3000)
             };
-
-        foreach (var newItem in newEquipment)
-        {
-            repo.LaggTill(newItem);
-        }
+        repo.LaggTillAlla(newEquipment);
     }
 
     public List<Enhet> SearchByName(string name)

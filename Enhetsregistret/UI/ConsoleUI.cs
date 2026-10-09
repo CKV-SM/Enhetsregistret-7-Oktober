@@ -69,24 +69,7 @@ public class ConsoleUI
             Console.WriteLine($"Pris inklusive moms: {Prisberakningar.BeraknaPrisMedMoms(enhet.Pris):F2} kr");
         }
     }
-
-    private void LaggTillEnhet()
-    {
-        string namn;
-        do
-        {
-            Console.Write("Namn: ");
-            namn = LasaRad().Trim();
-            if (namn.Length == 0)
-                Console.WriteLine("Ange ett namn.");
-        } while (namn.Length == 0);
-
-        decimal pris = LasaDecimal("Pris exklusive moms: ", 0m, Enhet.MaxPris);
-        //        Enhet enhet = new Enhet(namn, pris);
-        //        _repository.LaggTill(enhet);
-        Console.WriteLine("Enheten har lagts till med status Aktiv.");
-    }
-
+    
     private Enhet? ValjEnhet()
     {
         var enheter = _service.GetAll();
@@ -126,12 +109,6 @@ public class ConsoleUI
         catch (ArgumentOutOfRangeException e) {
             Console.WriteLine($"Du har skrivit ett ogiltigt värde: {e.Message}");
         }
-    }
-
-    public void ShowErrorMessage()
-    {
-        Console.WriteLine($"Ett fel uppstod: {e.Message}");
-        Console.ReadLine();
     }
 
     private void ForhandsvisaRabatt()
@@ -198,5 +175,98 @@ public class ConsoleUI
         string? rad = Console.ReadLine();
         if (rad == null) throw new EndOfStreamException();
         return rad;
+    }
+
+    private Laptop CreateLaptop(int id, string namn, decimal pris)
+    {
+        Console.Write("RAM i GB: ");
+
+        if (!int.TryParse(Console.ReadLine(), out int ramGb))
+        {
+            throw new ArgumentException("RAM måste vara ett heltal.");
+        }
+
+        return new Laptop(id, namn, pris, ramGb);
+    }
+
+    private Projektor CreateProjector(int id, string namn, decimal pris)
+    {
+        Console.Write("Ljusstyrka i lumen: ");
+
+        if (!int.TryParse(Console.ReadLine(), out int lumen))
+        {
+            throw new ArgumentException("Ljusstyrka måste vara ett heltal.");
+        }
+
+        return new Projektor(id, namn, pris, lumen);
+    }
+
+    private Mobil CreateMobil(int id, string namn, decimal pris)
+    {
+        Console.Write("Storlek i tum: ");
+
+        if (!double.TryParse(Console.ReadLine(), out double tum))
+        {
+            throw new ArgumentException("Arbetsminnet måste vara i heltal.");
+        }
+
+        return new Mobil(id, namn, pris, tum);
+    }
+    
+    private void LaggTillEnhet()
+    {
+        Console.Clear();
+        Console.WriteLine("=== LÄGG TILL ENHET ===\n");
+        Console.WriteLine("1. Laptop");
+        Console.WriteLine("2. Projektor");
+        Console.WriteLine("3. Skärm");
+        Console.Write("\nTyp: ");
+
+        string? typ = Console.ReadLine();
+
+        Console.Write("Id: ");
+        if (!int.TryParse(Console.ReadLine(), out int id))
+        {
+            Console.WriteLine("Id måste vara ett heltal.");
+            Pause();
+            return;
+        }
+
+        Console.Write("Namn: ");
+        string namn = Console.ReadLine() ?? "";
+
+        Console.Write("Pris: ");
+        if (!decimal.TryParse(Console.ReadLine(), out decimal pris))
+        {
+            Console.WriteLine("Pris måste vara ett tal.");
+            Pause();
+            return;
+        }
+        
+        Enhet? enhet = typ switch
+        {
+            "1" => CreateLaptop(id, namn, pris),
+            "2" => CreateProjector(id, namn, pris),
+            "3" => CreateMobil(id, namn, pris),
+            _ => null
+        };
+
+        if (enhet == null)
+        {
+            Console.WriteLine("Ogiltig typ.");
+        }
+        else
+        {
+            _service.Add(enhet);
+            Console.WriteLine($"\n{enhet.Typ} lades till.");
+        }
+
+        Pause();
+    }
+    
+    private void Pause()
+    {
+        Console.WriteLine("\nTryck på valfri tangent för att fortsätta...");
+        Console.ReadKey();
     }
 }
