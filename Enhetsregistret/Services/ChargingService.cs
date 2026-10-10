@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Enhetsregistret.Services
 {
-    public class LaddningsService
+    public class ChargingService
     {
-        public void Ladda(ILaddningsbar enhet) {
-            bool gickAttLadda = enhet.Ladda();
-            if (gickAttLadda)
+        public void Charge(IChargeable enhet) {
+            bool chargingSuccessful = enhet.Charge();
+            if (chargingSuccessful)
             {
                 Console.WriteLine("Laddning gick bra");
             }

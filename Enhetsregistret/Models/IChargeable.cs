@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Enhetsregistret.Models
 {
-    public interface ILaddningsbar
+    public interface IChargeable
     {
-        double LaddningNiva { get; set; }
-        bool Ladda();
+        double ChargeLevel { get; set; }
+        bool Charge();
     }
 }

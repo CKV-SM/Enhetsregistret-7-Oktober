@@ -1,24 +1,27 @@
 ﻿namespace Enhetsregistret.Models;
 
-public class Laptop : Enhet, ILaddningsbar
+public class Laptop : Equipment, IChargeable
 {
     public double SkärmStorlek { get; set; }
     public double LaddningNiva { get; set; }
 
     public Laptop(int id, string namn, decimal pris, double skärmStorlek) : base(id, namn, pris)
+    public double ScreenSize { get; set; }
+    public double ChargeLevel { get; set; }
+    public Laptop(int id, string name, decimal price, double screenSize) : base(id, name, price)
     {
-        SkärmStorlek = skärmStorlek;
+        ScreenSize = screenSize;
     }
 
-    public override string Beskrivning()
+    public override string Description()
     {
-        return $"{Namn} – {Status} - Skärmstorlek (Tum): {SkärmStorlek}";
+        return $"{Name} – {Status} - Screensize (Inches): {ScreenSize}";
     }
 
-    public bool Ladda()
+    public bool Charge()
     {
-        Console.WriteLine("Jag är en bärbar dator och jag laddar just nu...");
-        LaddningNiva = 100;
+        Console.WriteLine("I am a laptop and I am currently charging...");
+        ChargeLevel = 100;
         return true;
     }
 }

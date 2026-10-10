@@ -7,20 +7,20 @@ namespace Enhetsregistret.UI;
 
 public class ConsoleUI
 {
-    private readonly IEnhetsService _service;
+    private readonly IEquipmentService _service;
 
-    public ConsoleUI(IEnhetsService service)
+    public ConsoleUI(IEquipmentService service)
     {
         ArgumentNullException.ThrowIfNull(service);
         _service = service;
     }
 
-    public void Kor()
+    public void Run()
     {
         try
         {
-            bool korProgrammet = true;
-            while (korProgrammet)
+            bool runSoftware = true;
+            while (runSoftware)
             {
                 try
                 {
@@ -33,14 +33,14 @@ public class ConsoleUI
                     Console.WriteLine("5. Ändra status");
                     Console.WriteLine("6. Avsluta");
 
-                    switch (LasaHeltal("Välj alternativ: ", 1, 6))
+                    switch (ReadInteger("Välj alternativ: ", 1, 6))
                     {
-                        case 1: VisaAlla(); break;
-                        case 2: LaggTillEnhet(); break;
-                        case 3: AndraPris(); break;
-                        case 4: ForhandsvisaRabatt(); break;
-                        case 5: AndraStatus(); break;
-                        case 6: korProgrammet = false; break;
+                        case 1: ShowAll(); break;
+                        case 2: AddEquipment(); break;
+                        case 3: UpdatePrice(); break;
+                        case 4: PreviewRebate(); break;
+                        case 5: UpdateStatus(); break;
+                        case 6: runSoftware = false; break;
                     }
                 }
                 catch (Exception e)
@@ -56,21 +56,21 @@ public class ConsoleUI
         Console.WriteLine("Enhetsregistret avslutas.");
     }
 
-    private void VisaAlla()
+    private void ShowAll()
     {
-        var enheter = _service.GetAll().ToList();
-        if (enheter.Count == 0)
+        var items = _service.GetAll().ToList();
+        if (items.Count == 0)
             Console.WriteLine("Registret är tomt.");
 
-        foreach (Enhet enhet in enheter)
+        foreach (Equipment item in items)
         {
-            Console.WriteLine($"\n{enhet.Beskrivning()}");
-            Console.WriteLine($"Pris exklusive moms: {enhet.Pris:F2} kr");
-            Console.WriteLine($"Pris inklusive moms: {Prisberakningar.BeraknaPrisMedMoms(enhet.Pris):F2} kr");
+            Console.WriteLine($"\n{item.Description()}");
+            Console.WriteLine($"Pris exklusive moms: {item.Price:F2} kr");
+            Console.WriteLine($"Pris inklusive moms: {Calculations.CalculatePriceIncludingTax(item.Price):F2} kr");
         }
     }
     
-    private Enhet? ValjEnhet()
+    private Equipment? PickEquipment()
     {
         var enheter = _service.GetAll();
 
@@ -81,10 +81,10 @@ public class ConsoleUI
         }
 
         for (int i = 0; i < enheter.Length; i++)
-            Console.WriteLine($"{i + 1}. {enheter[i].Beskrivning()}");
+            Console.WriteLine($"{i + 1}. {enheter[i].Description()}");
         Console.WriteLine("0. Avbryt");
 
-        int val = LasaHeltal("Välj enhet: ", 0, enheter.Length);
+        int val = ReadInteger("Välj enhet: ", 0, enheter.Length);
 
         if (val == 0)
             return null;
@@ -92,15 +92,15 @@ public class ConsoleUI
         return enheter[val - 1];
     }
 
-    private void AndraPris()
+    private void UpdatePrice()
     {
         try
         {
-            Enhet? enhet = ValjEnhet();
+            Equipment? enhet = PickEquipment();
             if (enhet == null) return;
 
-            decimal pris = LasaDecimal("Nytt pris exklusive moms: ", -1000m, Enhet.MaxPris);
-            enhet.Pris = pris;
+            decimal pris = ReadDecimal("Nytt pris exklusive moms: ", -1000m, Equipment.MaxPrice);
+            enhet.Price = pris;
             Console.WriteLine("Priset har ändrats.");
         }
         catch (MissingFieldException e) {
@@ -111,54 +111,54 @@ public class ConsoleUI
         }
     }
 
-    private void ForhandsvisaRabatt()
+    private void PreviewRebate()
     {
-        Enhet? enhet = ValjEnhet();
+        Equipment? enhet = PickEquipment();
         if (enhet == null) return;
 
-        decimal rabatt = LasaDecimal("Rabatt i procent: ", 0m, 100m);
-        decimal rabatteratPris = Prisberakningar.BeraknaRabatteratPris(enhet.Pris, rabatt);
-        Console.WriteLine($"Originalpris exklusive moms: {enhet.Pris:F2} kr");
+        decimal rabatt = ReadDecimal("Rabatt i procent: ", 0m, 100m);
+        decimal rabatteratPris = Calculations.CalculateRebatePrice(enhet.Price, rabatt);
+        Console.WriteLine($"Originalpris exklusive moms: {enhet.Price:F2} kr");
         Console.WriteLine($"Pris efter rabatt exklusive moms: {rabatteratPris:F2} kr");
-        Console.WriteLine($"Moms (25 %): {Prisberakningar.BeraknaMomsbelopp(rabatteratPris):F2} kr");
-        Console.WriteLine($"Totalpris inklusive moms: {Prisberakningar.BeraknaPrisMedMoms(rabatteratPris):F2} kr");
+        Console.WriteLine($"Moms (25 %): {Calculations.CalculateSalestax(rabatteratPris):F2} kr");
+        Console.WriteLine($"Totalpris inklusive moms: {Calculations.CalculatePriceIncludingTax(rabatteratPris):F2} kr");
         Console.WriteLine("Förhandsvisningen ändrar inte enhetens sparade pris.");
     }
 
-    private void AndraStatus()
+    private void UpdateStatus()
     {
-        Enhet? enhet = ValjEnhet();
+        Equipment? enhet = PickEquipment();
         if (enhet == null) return;
 
         Console.WriteLine("1. Aktiv\n2. Inaktiv\n3. Service\n4. Avbryt");
-        int val = LasaHeltal("Välj status: ", 1, 4);
+        int val = ReadInteger("Välj status: ", 1, 4);
         switch (val)
         {
-            case 1: enhet.AndraStatus("Aktiv"); break;
-            case 2: enhet.AndraStatus("Inaktiv"); break;
-            case 3: enhet.AndraStatus("Service"); break;
+            case 1: enhet.UpdateStatus("Aktiv"); break;
+            case 2: enhet.UpdateStatus("Inaktiv"); break;
+            case 3: enhet.UpdateStatus("Service"); break;
             case 4: return;
         }
         Console.WriteLine("Statusen har ändrats.");
     }
 
-    private int LasaHeltal(string fraga, int min, int max)
+    private int ReadInteger(string fraga, int min, int max)
     {
         while (true)
         {
             Console.Write(fraga);
-            if (int.TryParse(LasaRad(), out int tal) && tal >= min && tal <= max)
+            if (int.TryParse(ReadLine(), out int tal) && tal >= min && tal <= max)
                 return tal;
             Console.WriteLine($"Ange ett heltal mellan {min} och {max}.");
         }
     }
 
-    private decimal LasaDecimal(string fraga, decimal min, decimal max)
+    private decimal ReadDecimal(string fraga, decimal min, decimal max)
     {
         while (true)
         {
             Console.Write(fraga);
-            if (decimal.TryParse(LasaRad(),
+            if (decimal.TryParse(ReadLine(),
                 System.Globalization.NumberStyles.AllowLeadingWhite |
                 System.Globalization.NumberStyles.AllowTrailingWhite |
                 System.Globalization.NumberStyles.AllowLeadingSign |
@@ -170,7 +170,7 @@ public class ConsoleUI
         }
     }
 
-    private string LasaRad()
+    private string ReadLine()
     {
         string? rad = Console.ReadLine();
         if (rad == null) throw new EndOfStreamException();
@@ -189,7 +189,7 @@ public class ConsoleUI
         return new Laptop(id, namn, pris, ramGb);
     }
 
-    private Projektor CreateProjector(int id, string namn, decimal pris)
+    private Projector CreateProjector(int id, string namn, decimal pris)
     {
         Console.Write("Ljusstyrka i lumen: ");
 
@@ -198,10 +198,10 @@ public class ConsoleUI
             throw new ArgumentException("Ljusstyrka måste vara ett heltal.");
         }
 
-        return new Projektor(id, namn, pris, lumen);
+        return new Projector(id, namn, pris, lumen);
     }
 
-    private Mobil CreateMobil(int id, string namn, decimal pris)
+    private Cellphone CreateMobil(int id, string namn, decimal pris)
     {
         Console.Write("Storlek i tum: ");
 
@@ -210,10 +210,10 @@ public class ConsoleUI
             throw new ArgumentException("Arbetsminnet måste vara i heltal.");
         }
 
-        return new Mobil(id, namn, pris, tum);
+        return new Cellphone(id, namn, pris, tum);
     }
     
-    private void LaggTillEnhet()
+    private void AddEquipment()
     {
         Console.Clear();
         Console.WriteLine("=== LÄGG TILL ENHET ===\n");
@@ -243,7 +243,7 @@ public class ConsoleUI
             return;
         }
         
-        Enhet? enhet = typ switch
+        Equipment? enhet = typ switch
         {
             "1" => CreateLaptop(id, namn, pris),
             "2" => CreateProjector(id, namn, pris),
@@ -258,7 +258,7 @@ public class ConsoleUI
         else
         {
             _service.Add(enhet);
-            Console.WriteLine($"\n{enhet.Typ} lades till.");
+            Console.WriteLine($"\nEnhet lades till.");
         }
 
         Pause();

@@ -4,22 +4,22 @@ using Enhetsregistret.Models;
 
 namespace Enhetsregistret.Repositories;
 
-public class EnhetsRepository : IEnhetsRepository
+public class EquipmentRepository : IEquipmentRepository
 {
-    private readonly List<Enhet> _enheter = new List<Enhet>();
+    private readonly List<Equipment> _enheter = new List<Equipment>();
 
-    public void LaggTill(Enhet enhet)
+    public void Add(Equipment equipment)
     {
-        ArgumentNullException.ThrowIfNull(enhet);
-        _enheter.Add(enhet);
+        ArgumentNullException.ThrowIfNull(equipment);
+        _enheter.Add(equipment);
     }
 
-    public List<Enhet> HamtaAlla()
+    public List<Equipment> GetAll()
     {
-        return new List<Enhet>(_enheter);
+        return new List<Equipment>(_enheter);
     }
 
-    public void LaggTillAlla(Enhet[] enheter)
+    public void ReplaceAll(Equipment[] enheter)
     {
         _enheter.AddRange(enheter);
     }

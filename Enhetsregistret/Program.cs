@@ -10,3 +10,6 @@ enhetsService.SeedData();
 
 var UI = new ConsoleUI(enhetsService);
 UI.Kor();
+equipmentService.SeedData();
+var UI = new ConsoleUI(equipmentService);
+UI.Run();
