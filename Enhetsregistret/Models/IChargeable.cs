@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Enhetsregistret.Models;
 
-namespace Enhetsregistret.Models
+public interface IChargeable
 {
-    public interface IChargeable
-    {
-        double ChargeLevel { get; set; }
-        bool Charge();
-    }
+    double ChargeLevel { get; set; }
+    bool Charge();
 }

@@ -1,6 +1,6 @@
 namespace Enhetsregistret.Models;
 
-public abstract class Enhet
+public abstract class Equipment
 {
     public const decimal MaxPrice = 1_000_000_000m;
     public int Id { get; private set; }

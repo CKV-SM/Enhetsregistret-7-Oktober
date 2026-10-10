@@ -3,13 +3,10 @@ using Enhetsregistret.Repositories;
 using Enhetsregistret.Services;
 using Enhetsregistret.UI;
 
-var repository = new EnhetsRepository();
-var enhetsService = new EnhetsService(repository);
+var repository = new EquipmentRepository();
+var enhetsService = new EquipmentService(repository);
 
 enhetsService.SeedData();
 
 var UI = new ConsoleUI(enhetsService);
-UI.Kor();
-equipmentService.SeedData();
-var UI = new ConsoleUI(equipmentService);
 UI.Run();

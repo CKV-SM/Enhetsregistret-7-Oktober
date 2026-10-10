@@ -1,31 +1,30 @@
-using System;
 using Enhetsregistret.Models;
 
 namespace Enhetsregistret.Utilities;
 
 public static class Calculations
 {
-    public static decimal CalculateRebatePrice(decimal price, decimal rebatePercent)
+    public static decimal CalculateWithRebate(decimal price, decimal rebatePercent)
     {
-        ControlPrice(price);
+        CheckPrice(price);
         if (rebatePercent < 0 || rebatePercent > 100)
             throw new ArgumentOutOfRangeException(nameof(rebatePercent));
 
         return price - price * (rebatePercent / 100m);
     }
 
-    public static decimal CalculateSalestax(decimal pris)
+    public static decimal CalculateTax(decimal pris)
     {
-        ControlPrice(pris);
+        CheckPrice(pris);
         return pris * 0.25m;
     }
 
     public static decimal CalculatePriceIncludingTax(decimal pris)
     {
-        return pris + CalculateSalestax(pris);
+        return pris + CalculateTax(pris);
     }
 
-    private static void ControlPrice(decimal pris)
+    private static void CheckPrice(decimal pris)
     {
         if (pris < 0 || pris > Equipment.MaxPrice)
             throw new ArgumentOutOfRangeException(nameof(pris));

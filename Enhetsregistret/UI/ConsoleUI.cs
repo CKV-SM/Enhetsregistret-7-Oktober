@@ -19,8 +19,7 @@ public class ConsoleUI
     {
         try
         {
-            bool runSoftware = true;
-            while (runSoftware)
+            while (true)
             {
                 try
                 {
@@ -40,7 +39,7 @@ public class ConsoleUI
                         case 3: UpdatePrice(); break;
                         case 4: PreviewRebate(); break;
                         case 5: UpdateStatus(); break;
-                        case 6: runSoftware = false; break;
+                        case 6: return;
                     }
                 }
                 catch (Exception e)
@@ -72,35 +71,36 @@ public class ConsoleUI
     
     private Equipment? PickEquipment()
     {
-        var enheter = _service.GetAll();
+        var items = _service.GetAll();
 
-        if (enheter.Length == 0)
+        if (items.Length == 0)
         {
             Console.WriteLine("Registret är tomt.");
             return null;
         }
 
-        for (int i = 0; i < enheter.Length; i++)
-            Console.WriteLine($"{i + 1}. {enheter[i].Description()}");
+        for (int i = 0; i < items.Length; i++)
+            Console.WriteLine($"{i + 1}. {items[i].Description()}");
+        
         Console.WriteLine("0. Avbryt");
 
-        int val = ReadInteger("Välj enhet: ", 0, enheter.Length);
+        int choice = ReadInteger("Välj enhet: ", 0, items.Length);
 
-        if (val == 0)
+        if (choice == 0)
             return null;
 
-        return enheter[val - 1];
+        return items[choice - 1];
     }
 
     private void UpdatePrice()
     {
         try
         {
-            Equipment? enhet = PickEquipment();
-            if (enhet == null) return;
+            Equipment? item = PickEquipment();
+            if (item == null) return;
 
             decimal pris = ReadDecimal("Nytt pris exklusive moms: ", -1000m, Equipment.MaxPrice);
-            enhet.Price = pris;
+            item.Price = pris;
             Console.WriteLine("Priset har ändrats.");
         }
         catch (MissingFieldException e) {
@@ -113,30 +113,30 @@ public class ConsoleUI
 
     private void PreviewRebate()
     {
-        Equipment? enhet = PickEquipment();
-        if (enhet == null) return;
+        Equipment? item = PickEquipment();
+        if (item == null) return;
 
-        decimal rabatt = ReadDecimal("Rabatt i procent: ", 0m, 100m);
-        decimal rabatteratPris = Calculations.CalculateRebatePrice(enhet.Price, rabatt);
-        Console.WriteLine($"Originalpris exklusive moms: {enhet.Price:F2} kr");
-        Console.WriteLine($"Pris efter rabatt exklusive moms: {rabatteratPris:F2} kr");
-        Console.WriteLine($"Moms (25 %): {Calculations.CalculateSalestax(rabatteratPris):F2} kr");
-        Console.WriteLine($"Totalpris inklusive moms: {Calculations.CalculatePriceIncludingTax(rabatteratPris):F2} kr");
+        decimal rebate = ReadDecimal("Rabatt i procent: ", 0m, 100m);
+        decimal priceWithRebate = Calculations.CalculateWithRebate(item.Price, rebate);
+        Console.WriteLine($"Originalpris exklusive moms: {item.Price:F2} kr");
+        Console.WriteLine($"Pris efter rabatt exklusive moms: {priceWithRebate:F2} kr");
+        Console.WriteLine($"Moms (25 %): {Calculations.CalculateTax(priceWithRebate):F2} kr");
+        Console.WriteLine($"Totalpris inklusive moms: {Calculations.CalculatePriceIncludingTax(priceWithRebate):F2} kr");
         Console.WriteLine("Förhandsvisningen ändrar inte enhetens sparade pris.");
     }
 
     private void UpdateStatus()
     {
-        Equipment? enhet = PickEquipment();
-        if (enhet == null) return;
+        Equipment? item = PickEquipment();
+        if (item == null) return;
 
         Console.WriteLine("1. Aktiv\n2. Inaktiv\n3. Service\n4. Avbryt");
         int val = ReadInteger("Välj status: ", 1, 4);
         switch (val)
         {
-            case 1: enhet.UpdateStatus("Aktiv"); break;
-            case 2: enhet.UpdateStatus("Inaktiv"); break;
-            case 3: enhet.UpdateStatus("Service"); break;
+            case 1: item.UpdateStatus("Aktiv"); break;
+            case 2: item.UpdateStatus("Inaktiv"); break;
+            case 3: item.UpdateStatus("Service"); break;
             case 4: return;
         }
         Console.WriteLine("Statusen har ändrats.");
