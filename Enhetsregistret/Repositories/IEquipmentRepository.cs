@@ -7,5 +7,6 @@ namespace Enhetsregistret.Repositories
         List<Equipment> GetAll();
         void Add(Equipment equipment);
         void ReplaceAll(Equipment[] enhet);
+        void Update(Equipment equipment);
     }
 }

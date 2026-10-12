@@ -23,4 +23,9 @@ public class EquipmentRepository : IEquipmentRepository
     {
         _enheter.AddRange(enheter);
     }
+
+    public void Update(Equipment equipment)
+    {
+        throw new NotImplementedException();
+    }
 }

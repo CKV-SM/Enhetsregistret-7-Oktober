@@ -56,4 +56,12 @@ public class EquipmentService : IEquipmentService
             .Where(units => units.Name.Contains(name))
             .ToList();
     }
+
+    public void UpdateItem(Equipment newState)
+    {
+        if (newState.Id is 0)
+            throw new Exception("Du måste sätta ett ID");
+
+        repo.Update(newState);
+    }
 }

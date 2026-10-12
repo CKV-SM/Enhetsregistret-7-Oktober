@@ -9,5 +9,6 @@ namespace Enhetsregistret.Services
         List<Equipment> SearchByName(string name);
         void Add(Equipment equipment);
         void SeedData();
+        void UpdateItem(Equipment newState);
     }
 }

@@ -1,5 +1,12 @@
+using System.Text.Json.Serialization;
+
 namespace Enhetsregistret.Models;
 
+
+[JsonPolymorphic]
+[JsonDerivedType(typeof(Laptop), "laptop")]
+[JsonDerivedType(typeof(Cellphone), "cellphone")]
+[JsonDerivedType(typeof(Projector), "projector")]
 public abstract class Equipment
 {
     public const decimal MaxPrice = 1_000_000_000m;

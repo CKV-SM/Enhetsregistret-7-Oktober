@@ -101,6 +101,7 @@ public class ConsoleUI
 
             decimal pris = ReadDecimal("Nytt pris exklusive moms: ", -1000m, Equipment.MaxPrice);
             item.Price = pris;
+            _service.UpdateItem(item);
             Console.WriteLine("Priset har ändrats.");
         }
         catch (MissingFieldException e) {
