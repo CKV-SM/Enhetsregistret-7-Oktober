@@ -13,14 +13,25 @@ string dataFolder = Path.Combine(basePath, "data");
 if (!Directory.Exists(dataFolder))
     Directory.CreateDirectory(dataFolder);
 
-var jsonPath = Path.Combine(dataFolder, "equipment.json");
+var jsonEquipmentPath = Path.Combine(dataFolder, "equipment.json");
+var jsonLoanPath = Path.Combine(dataFolder, "loans.json");
 
-var jsonRepository = new JsonEquipmentRepository(jsonPath);
-//var memoryRepository = new EquipmentRepository();
+var jsonEquipmentRepository = new JsonEquipmentRepository(jsonEquipmentPath);
 
-var enhetsService = new EquipmentService(jsonRepository);
-enhetsService.SeedData();
+var jsonLoanRepository = new JsonLoanRepository(jsonLoanPath);
 
+var equipmentService = new EquipmentService(jsonEquipmentRepository);
 
-var UI = new ConsoleUI(enhetsService);
+var loanService = new LoanService(
+    jsonEquipmentRepository, 
+    jsonLoanRepository
+);
+
+equipmentService.SeedData();
+
+var loanMenu = new LoanMenu(loanService);
+var equipmentMenu = new EquipmentMenu(equipmentService);
+
+var UI = new MainMenu(equipmentMenu, loanMenu);
+
 UI.Run();
