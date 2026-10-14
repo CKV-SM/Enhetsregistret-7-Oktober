@@ -58,11 +58,13 @@ namespace Enhetsregistret.UI
                 {
                     var success = int.TryParse(Console.ReadLine(), out var value);
                     if (!success){
-                            Console.WriteLine("Vänligen skriv in ett giltigt värde");
+                        Console.WriteLine("Vänligen skriv in ett giltigt värde");
+                    } else
+                    {
+                        loanService.Loan(value);
+                        Console.WriteLine("Utlåning gick bra.");
+                        activeLoop = false;
                     }
-                    loanService.Loan(value);
-                    Console.WriteLine("Utlåning gick bra.");
-                    activeLoop = false;
                 } catch(Exception e)
                 {
                     Console.WriteLine("Utlåning gick inte :(");

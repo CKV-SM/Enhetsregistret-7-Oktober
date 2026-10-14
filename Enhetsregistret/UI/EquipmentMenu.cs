@@ -24,7 +24,7 @@ namespace Enhetsregistret.UI
                 {
                     try
                     {
-                        Console.WriteLine("\nUtlåningar");
+                        Console.WriteLine("\nUtrustning");
                         Console.WriteLine("1. Visa alla enheter");
                         Console.WriteLine("2. Lägg till enhet");
                         Console.WriteLine("3. Ändra pris");

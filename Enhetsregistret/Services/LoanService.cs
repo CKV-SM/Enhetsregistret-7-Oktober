@@ -55,7 +55,7 @@ public class LoanService : ILoanService
         }
 
         var newLoanId = 1;
-        if (allLoans.Count > 1)
+        if (allLoans.Count > 0)
         {
             newLoanId = allLoans.Max(loan => loan.Id) + 1;
         }
