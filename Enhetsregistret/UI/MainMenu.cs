@@ -29,7 +29,7 @@ public class MainMenu
                     Console.WriteLine("2. Hantera utlåningar");
                     Console.WriteLine("3. Avsluta");
 
-                    switch (MenuHelper.ReadInteger("Välj alternativ: ", 1, 7))
+                    switch (MenuHelper.ReadInteger("Välj alternativ: ", 1, 3))
                     {
                         case 1: ShowEquipmentMenu(); break;
                         case 2: ShowLoanMenu(); break;
