@@ -1,8 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.10.12217.157 stable
+VisualStudioVersion = 18.10.12217.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enhetsregistret", "Enhetsregistret\Enhetsregistret.csproj", "{D8E4D8CF-72D1-44D2-A522-7C47F023532A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enhetsregistret.Tests", "Enhetsregistret.Tests\Enhetsregistret.Tests.csproj", "{FC6349BA-233A-4874-B13C-D58E301A9F33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,6 +16,10 @@ Global
 		{D8E4D8CF-72D1-44D2-A522-7C47F023532A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8E4D8CF-72D1-44D2-A522-7C47F023532A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8E4D8CF-72D1-44D2-A522-7C47F023532A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC6349BA-233A-4874-B13C-D58E301A9F33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC6349BA-233A-4874-B13C-D58E301A9F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC6349BA-233A-4874-B13C-D58E301A9F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC6349BA-233A-4874-B13C-D58E301A9F33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
