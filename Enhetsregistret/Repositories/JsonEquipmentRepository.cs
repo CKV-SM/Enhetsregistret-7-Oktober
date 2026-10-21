@@ -44,6 +44,7 @@ public class JsonEquipmentRepository : IEquipmentRepository
     public void ReplaceAll(Equipment[] enheter)
     {
         var currentItems = GetAll();
+        currentItems.Clear();
         currentItems.AddRange(enheter);
         var itemsAsJson = JsonSerializer.Serialize(currentItems);
         File.WriteAllText(_filePath, itemsAsJson);

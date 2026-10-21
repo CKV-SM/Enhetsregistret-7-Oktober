@@ -10,6 +10,7 @@ using System.Text.Json;
 string basePath = AppContext.BaseDirectory;
 string dataFolder = Path.Combine(basePath, "data");
 
+
 if (!Directory.Exists(dataFolder))
     Directory.CreateDirectory(dataFolder);
 
@@ -17,9 +18,7 @@ var jsonEquipmentPath = Path.Combine(dataFolder, "equipment.json");
 var jsonLoanPath = Path.Combine(dataFolder, "loans.json");
 
 var jsonEquipmentRepository = new JsonEquipmentRepository(jsonEquipmentPath);
-
 var jsonLoanRepository = new JsonLoanRepository(jsonLoanPath);
-
 var equipmentService = new EquipmentService(jsonEquipmentRepository);
 
 var loanService = new LoanService(
